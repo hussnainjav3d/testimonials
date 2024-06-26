@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  NotFoundException,
 } from '@nestjs/common';
 import { ProjectsService } from './projects.service';
 import { Prisma } from '@prisma/client';
@@ -26,7 +27,7 @@ export class ProjectsController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.projectsService.findOne(+id);
+    return this.projectsService.findOne(id);
   }
 
   @Patch(':id')
@@ -34,7 +35,15 @@ export class ProjectsController {
     @Param('id') id: string,
     @Body() updateProjectDto: Prisma.ProjectUpdateInput,
   ) {
-    return this.projectsService.update(+id, updateProjectDto);
+    try {
+      return this.projectsService.update(id, updateProjectDto);
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw new NotFoundException(error.message);
+      }
+      console.log(`error`, error);
+      throw error;
+    }
   }
 
   @Delete(':id')
