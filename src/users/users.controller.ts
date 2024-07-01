@@ -8,6 +8,7 @@ import {
   Patch,
   Post,
   Query,
+  UseGuards,
   ValidationPipe,
 } from '@nestjs/common';
 
@@ -15,11 +16,16 @@ import { UsersService } from './users.service';
 import { Role } from 'types';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { AuthGuard, AuthRGuard } from 'src/auth/auth.guard';
+import { AuthorizedRole } from 'src/auth/role-decorator';
+import { RolesEnum } from 'src/auth/utility/enums';
 
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
   @Get()
+  @AuthorizedRole(RolesEnum.SUPER_USER)
+  @UseGuards(AuthGuard, AuthRGuard)
   findAll(@Query('role') role?: Role) {
     return this.usersService.findAll(role);
   }

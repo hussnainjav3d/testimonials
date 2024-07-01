@@ -5,10 +5,11 @@ import { UsersModule } from './users/users.module';
 import { ProjectsModule } from './projects/projects.module';
 import { OrgsModule } from './orgs/orgs.module';
 import { AuthModule } from './auth/auth.module';
+import { JwtService } from '@nestjs/jwt';
 
 @Module({
   imports: [UsersModule, ProjectsModule, OrgsModule, AuthModule],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, JwtService],
 })
 export class AppModule {}
