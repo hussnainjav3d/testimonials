@@ -9,14 +9,15 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { OrgsService } from './orgs.service';
-import { Prisma } from '@prisma/client';
+import { CreateOrgDto } from './dto/create-org.dto';
+import { UpdateOrgDto } from './dto/update-org.dto';
 
 @Controller('orgs')
 export class OrgsController {
   constructor(private readonly orgsService: OrgsService) {}
 
   @Post()
-  create(@Body() createOrgDto: Prisma.OrganizationCreateInput) {
+  create(@Body() createOrgDto: CreateOrgDto) {
     return this.orgsService.create(createOrgDto);
   }
 
@@ -31,10 +32,7 @@ export class OrgsController {
   }
 
   @Patch(':id')
-  async update(
-    @Param('id') id: string,
-    @Body() updateOrgDto: Prisma.OrganizationUpdateInput,
-  ) {
+  async update(@Param('id') id: string, @Body() updateOrgDto: UpdateOrgDto) {
     try {
       return this.orgsService.update(id, updateOrgDto);
     } catch (error) {

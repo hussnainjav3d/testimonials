@@ -1,11 +1,12 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { Prisma } from '@prisma/client';
 import { DatabaseService } from 'src/database/database.service';
+import { CreateOrgDto } from './dto/create-org.dto';
+import { UpdateOrgDto } from './dto/update-org.dto';
 
 @Injectable()
 export class OrgsService {
   constructor(private readonly databaseService: DatabaseService) {}
-  async create(createOrgDto: Prisma.OrganizationCreateInput) {
+  async create(createOrgDto: CreateOrgDto) {
     return this.databaseService.organization.create({
       data: createOrgDto,
     });
@@ -31,7 +32,7 @@ export class OrgsService {
     return org;
   }
 
-  async update(id: string, updateOrgDto: Prisma.OrganizationUpdateInput) {
+  async update(id: string, updateOrgDto: UpdateOrgDto) {
     const org = await this.findOne(id);
     if (!org) {
       throw new NotFoundException(`Org with ${id} Not Found`);

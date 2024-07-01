@@ -3,13 +3,14 @@ import {
   NotFoundException,
   NotImplementedException,
 } from '@nestjs/common';
-import { Prisma } from '@prisma/client';
 import { DatabaseService } from 'src/database/database.service';
+import { CreateProjectDto } from './dto/create-project.dto';
+import { UpdateProjectDto } from './dto/update-project.dto';
 
 @Injectable()
 export class ProjectsService {
   constructor(private readonly databaseService: DatabaseService) {}
-  async create(createProjectDto: Prisma.ProjectCreateInput) {
+  async create(createProjectDto: CreateProjectDto) {
     return this.databaseService.project.create({ data: createProjectDto });
   }
 
@@ -52,7 +53,7 @@ export class ProjectsService {
     return project;
   }
 
-  async update(id: string, updateProjectDto: Prisma.ProjectUpdateInput) {
+  async update(id: string, updateProjectDto: UpdateProjectDto) {
     const project = await this.findOne(id);
     if (!project) {
       throw new NotFoundException(`Project with ${id} Not Found`);

@@ -8,17 +8,17 @@ import { DatabaseService } from 'src/database/database.service';
 export class UsersService {
   constructor(private readonly databaseService: DatabaseService) {}
 
-  findAll(role?: Role) {
-    // if (role) {
-    //   const rolesArray = this.users.filter(
-    //     (user) => user.role?.toUpperCase() === role?.toUpperCase(),
-    //   );
-    //   if (!rolesArray.length) {
-    //     throw new NotFoundException('User role not found');
-    //   }
-    //   return rolesArray;
-    // }
-    return `this.users ${role}`;
+  async findAll(role?: Role) {
+    if (role) {
+      const users = await this.databaseService.user.findMany({
+        where: {
+          role,
+        },
+      });
+      return users;
+    }
+    const users = await this.databaseService.user.findMany();
+    return users;
   }
 
   findOne(id: number) {

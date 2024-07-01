@@ -11,8 +11,12 @@ export class CreateUserDto {
   @IsEmail()
   email: string;
 
-  @IsEnum(['EDITOR', 'READER', 'MANAGER'], {
-    message: 'Role must be one of the following: EDITOR, READER, MANAGER',
+  @IsString()
+  org_id: string;
+
+  @IsEnum(['EDITOR', 'READER', 'MANAGER', 'SUPER_USER'], {
+    message:
+      'Role must be one of the following: EDITOR, READER, MANAGER, SUPER_USER',
   })
   role: Role;
 }
