@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  NotImplementedException,
+} from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { DatabaseService } from 'src/database/database.service';
 
@@ -9,8 +13,33 @@ export class ProjectsService {
     return this.databaseService.project.create({ data: createProjectDto });
   }
 
-  async findAll() {
-    return this.databaseService.project.findMany();
+  async findAll(page = 1, limit = 10): Promise<any> {
+    try {
+      const skip = (page - 1) * limit;
+      const [projects, total] = await this.databaseService.$transaction([
+        this.databaseService.project.findMany({
+          skip,
+          take: +limit,
+          orderBy: {
+            createdAt: 'desc',
+          },
+        }),
+        this.databaseService.project.count(),
+      ]);
+      return {
+        data: {
+          projects,
+          totalRecords: total,
+          currentPage: +page,
+          currentPageRecord: projects.length,
+        },
+        hasError: false,
+        message: 'SUCCESS: Operation completed successfully',
+      };
+    } catch (error) {
+      console.log(`error-code`, error);
+      throw new NotImplementedException(error.message);
+    }
   }
 
   async findOne(id: string) {

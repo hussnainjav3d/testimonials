@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   NotFoundException,
+  Query,
 } from '@nestjs/common';
 import { ProjectsService } from './projects.service';
 import { Prisma } from '@prisma/client';
@@ -21,13 +22,24 @@ export class ProjectsController {
   }
 
   @Get()
-  findAll() {
-    return this.projectsService.findAll();
+  findAll(@Query('page') page: number = 1, @Query('limit') limit: number = 10) {
+    if (isNaN(page) || page < 1) {
+      page = 1;
+    }
+    if (isNaN(limit) || limit < 1) {
+      page = 10;
+    }
+
+    return this.projectsService.findAll(page, limit);
   }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.projectsService.findOne(id);
+  }
+  @Get()
+  listProjects() {
+    return `this.projectsService.findAll()`;
   }
 
   @Patch(':id')

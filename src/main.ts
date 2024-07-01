@@ -1,12 +1,14 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { PrismaClientExceptionFilter } from 'filters/prisma-constraints-filters';
+// import { PrismaClientExceptionFilter } from 'filters/prisma-constraints-filters';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { LoggingMiddleware } from 'middlewares/logging.middleware';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  app.useGlobalFilters(new PrismaClientExceptionFilter());
-
+  // app.useGlobalFilters(new PrismaClientExceptionFilter());
+  app.use(new LoggingMiddleware().use);
+  app.setGlobalPrefix('api');
   const config = new DocumentBuilder()
     .setTitle('Testimonials')
     .setDescription('The Testimonials API')
