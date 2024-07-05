@@ -42,23 +42,16 @@ export class AuthGuard implements CanActivate {
 export class AuthRGuard implements CanActivate {
   constructor(private reflector: Reflector) {}
   canActivate(context: ExecutionContext): boolean | Promise<boolean> {
-    console.log(`----`, this.reflector);
-    // if (!this.reflector) {
-    //   return true;
-    // }
     const required_roles = this.reflector.getAllAndOverride<RolesEnum[]>(
       'roles',
       [context.getHandler(), context.getClass()],
     );
-
-    console.log(`required_roles--`, required_roles);
 
     if (!required_roles) {
       return true;
     }
 
     const { user } = context.switchToHttp().getRequest();
-    console.log(`user---`, user);
     return required_roles.includes(user.role);
   }
 }

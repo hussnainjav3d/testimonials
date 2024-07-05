@@ -6,9 +6,10 @@ import { ProjectsModule } from './projects/projects.module';
 import { OrgsModule } from './orgs/orgs.module';
 import { AuthModule } from './auth/auth.module';
 import { JwtService } from '@nestjs/jwt';
+import { TestimonialsModule } from './testimonials/testimonials.module';
 
 @Module({
-  imports: [UsersModule, ProjectsModule, OrgsModule, AuthModule],
+  imports: [UsersModule, ProjectsModule, OrgsModule, AuthModule, TestimonialsModule],
   controllers: [AppController],
   providers: [AppService, JwtService],
 })
